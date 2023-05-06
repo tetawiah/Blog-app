@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,7 @@ Route::get('authors/{author:username}', function (User $author) {
         'posts' => $author->posts,
     ]);
 });
+
+Route::get('register', [RegisterController::class, 'create'])->middleware('guest');
+
+Route::post('register', [RegisterController::class, 'store'])->middleware('guest');
