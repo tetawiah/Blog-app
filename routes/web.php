@@ -21,9 +21,9 @@ use Illuminate\Routing\RouteUri;
 |
 */
 
-Route::get('/', [PostController::class,'index'])->name('home');
+Route::get('/', [PostController::class, 'index'])->name('home');
 
-Route::get('posts/{post:slug}',[PostController::class,'show']);
+Route::get('posts/{post:slug}', [PostController::class, 'show']);
 
 
 Route::get('authors/{author:username}', function (User $author) {
@@ -32,7 +32,7 @@ Route::get('authors/{author:username}', function (User $author) {
     ]);
 });
 
-Route::post('posts/{post:slug}/comments',[PostCommentController::class,'store'])->middleware('auth');
+Route::post('posts/{post:slug}/comments', [PostCommentController::class, 'store'])->middleware('auth');
 
 Route::get('register', [RegisterController::class, 'create'])->middleware('guest');
 Route::post('register', [RegisterController::class, 'store'])->middleware('guest');
@@ -44,13 +44,8 @@ Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth'
 
 Route::post('newsletter', NewsletterController::class);
 
-Route::get('admin/posts', [AdminPostController::class,'index'])->middleware('admin');
-Route::get('admin/posts/create',[AdminPostController::class,'create'])->middleware('admin');
+Route::middleware('can:admin')->group(function () {
 
-Route::get('admin/posts/{post}/edit',[AdminPostController::class,'edit'])->middleware('admin');
-Route::patch('admin/posts/{post}',[AdminPostController::class,'update'])->middleware('admin');
-Route::delete('admin/posts/{post}',[AdminPostController::class,'destroy']);
-
-Route::post('admin/posts',[AdminPostController::class,'store'])->middleware('admin');
-
-
+    Route::resource('admin/posts',AdminPostController::class)->except('show');
+    
+});
